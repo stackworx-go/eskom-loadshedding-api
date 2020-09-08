@@ -17,7 +17,7 @@ func parseTime(value string, location *time.Location) (time.Time, error) {
 
 var slotRe = regexp.MustCompile(`(\d{2}:\d{2} - \d{2}:\d{2})`)
 
-func parseHTMLTime(year int, dateOfMonth, slotsRaw string, location *time.Location) (ScheduleDay, error) {
+func parseHTMLTime(year int, dateOfMonth, slotsRaw string, location *time.Location, stage Stage) (ScheduleDay, error) {
 	matches := slotRe.FindAllString(slotsRaw, -1)
 
 	if matches == nil {
@@ -59,6 +59,7 @@ func parseHTMLTime(year int, dateOfMonth, slotsRaw string, location *time.Locati
 		}
 
 		slots = append(slots, ScheduleSlot{
+			Stage:    stage,
 			Start:    start,
 			Duration: end.Sub(start),
 		})

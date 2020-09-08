@@ -247,6 +247,7 @@ func Test_GetSchedule(t *testing.T) {
 				0,
 				tz,
 			),
+			Stage:    Stage1,
 			Duration: mustParseDuration("2h30m"),
 		}, day.Slots[0])
 }

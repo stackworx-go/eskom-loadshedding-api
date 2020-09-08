@@ -34,7 +34,7 @@ func Test_parseHTMLTime(t *testing.T) {
 	tz, err := time.LoadLocation("Africa/Johannesburg")
 	assert.NoError(err)
 
-	slots, err := parseHTMLTime(2020, "Mon, 07 Sep", "00:00 - 02:30", tz)
+	slots, err := parseHTMLTime(2020, "Mon, 07 Sep", "00:00 - 02:30", tz, 0)
 
 	assert.NoError(err)
 	assert.Equal(1, len(slots.Slots))
@@ -59,7 +59,7 @@ func Test_parseHTMLTime_doubleSlot(t *testing.T) {
 	tz, err := time.LoadLocation("Africa/Johannesburg")
 	assert.NoError(err)
 
-	slots, err := parseHTMLTime(2020, "Mon, 07 Sep", "04:00 - 08:3020:00 - 00:30", tz)
+	slots, err := parseHTMLTime(2020, "Mon, 07 Sep", "04:00 - 08:3020:00 - 00:30", tz, 0)
 
 	assert.NoError(err)
 	assert.Equal(2, len(slots.Slots))

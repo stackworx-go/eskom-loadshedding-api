@@ -22,6 +22,7 @@ func (a ByDay) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 // ScheduleSlot export
 type ScheduleSlot struct {
 	Start    time.Time
+	Stage    Stage
 	Duration time.Duration
 }
 

@@ -195,6 +195,7 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 	type block struct {
 		dayMonth string
 		duration string
+		stage    Stage
 	}
 
 	var blocks []block
@@ -222,7 +223,7 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 
 			if duration != "" {
 				blocks = append(blocks, block{
-					dayMonth, duration,
+					dayMonth, duration, stage,
 				})
 			}
 		})
@@ -231,7 +232,7 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 	year := time.Now().Year()
 
 	for _, block := range blocks {
-		day, err := parseHTMLTime(year, block.dayMonth, block.duration, c.location)
+		day, err := parseHTMLTime(year, block.dayMonth, block.duration, c.location, block.stage)
 
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse html duration: %w", err)
