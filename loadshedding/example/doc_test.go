@@ -93,7 +93,7 @@ func ExampleClient_GetSchedule() {
 
 	result, err := client.GetSchedule(loadshedding.GetScheduleRequest{
 		SuburbID: "1",
-		Stage:    loadshedding.Stage3,
+		Stages:   []loadshedding.Stage{loadshedding.Stage3},
 	})
 
 	if err != nil {

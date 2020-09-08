@@ -180,7 +180,7 @@ func (c *Client) SearchSuburbs(req SearchSuburbsRequest) ([]SearchSuburb, error)
 
 // GetScheduleRequest export
 type GetScheduleRequest struct {
-	Stage    Stage
+	Stages   []Stage
 	SuburbID string
 }
 
@@ -188,20 +188,11 @@ type GetScheduleRequest struct {
 func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 	// TODO: validate stage
 
+	if req.Stages == nil {
+		req.Stages = []Stage{Stage1, Stage2, Stage3, Stage4}
+	}
+
 	var times []ScheduleTime
-
-	resp, err := c.createRequest().
-		// SetResult(&results).
-		Get(c.host + fmt.Sprintf("/GetScheduleM/%s/%d/_/1", req.SuburbID, req.Stage))
-
-	if err != nil {
-		return nil, err
-	}
-
-	doc, err := goquery.NewDocumentFromReader(resp.RawResponse.Body)
-	if err != nil {
-		return nil, err
-	}
 
 	type block struct {
 		dayMonth string
@@ -210,17 +201,32 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 
 	var blocks []block
 
-	doc.Find(".scheduleDay").Each(func(i int, s *goquery.Selection) {
-		// Example format Mon, 07 Sep
-		dayMonth := strings.TrimSpace(s.Find(".dayMonth").Text())
-		duration := strings.TrimSpace(s.Find("a").Text())
+	for _, stage := range req.Stages {
+		resp, err := c.createRequest().
+			// SetResult(&results).
+			Get(c.host + fmt.Sprintf("/GetScheduleM/%s/%d/_/1", req.SuburbID, stage))
 
-		if duration != "" {
-			blocks = append(blocks, block{
-				dayMonth, duration,
-			})
+		if err != nil {
+			return nil, err
 		}
-	})
+
+		doc, err := goquery.NewDocumentFromReader(resp.RawResponse.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		doc.Find(".scheduleDay").Each(func(i int, s *goquery.Selection) {
+			// Example format Mon, 07 Sep
+			dayMonth := strings.TrimSpace(s.Find(".dayMonth").Text())
+			duration := strings.TrimSpace(s.Find("a").Text())
+
+			if duration != "" {
+				blocks = append(blocks, block{
+					dayMonth, duration,
+				})
+			}
+		})
+	}
 
 	year := time.Now().Year()
 

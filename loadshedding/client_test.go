@@ -215,7 +215,7 @@ func Test_GetSchedule(t *testing.T) {
 		})
 
 	results, err := client.GetSchedule(GetScheduleRequest{
-		Stage:    Stage1,
+		Stages:   []Stage{Stage1},
 		SuburbID: "64106",
 	})
 	assert.NoError(err)
