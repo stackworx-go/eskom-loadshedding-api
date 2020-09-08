@@ -8,7 +8,7 @@ const (
 	FreeState
 	Gauteng
 	KwazuluNatal
-	Limpop
+	Limpopo
 	Mpumalanga
 	NorthWest
 	NorthernCape
