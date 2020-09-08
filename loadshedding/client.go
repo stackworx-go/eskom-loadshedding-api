@@ -69,13 +69,10 @@ func (c *Client) GetStatus() (Stage, error) {
 func (c *Client) GetMunicipalities(province Province) ([]Municipality, error) {
 	var results []Municipality
 
-	resp, err := c.createRequest().
+	_, err := c.createRequest().
 		SetQueryParam("Id", fmt.Sprintf("%d", province)).
 		SetResult(&results).
 		Get(c.host + "/GetMunicipalities")
-
-	raw := resp.String()
-	fmt.Print(raw)
 
 	if err != nil {
 		return nil, err
