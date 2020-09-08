@@ -190,7 +190,7 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 		req.Stages = []Stage{Stage1, Stage2, Stage3, Stage4}
 	}
 
-	var times []ScheduleTime
+	var days []ScheduleDay
 
 	type block struct {
 		dayMonth string
@@ -231,48 +231,28 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 	year := time.Now().Year()
 
 	for _, block := range blocks {
-		slots, err := parseHTMLTime(year, block.dayMonth, block.duration, c.location)
+		day, err := parseHTMLTime(year, block.dayMonth, block.duration, c.location)
 
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse html duration: %w", err)
 		}
 
-		for _, s := range slots {
-			times = append(times, ScheduleTime{
-				StartTime: s.Start,
-				EndTime:   s.End,
-			})
-		}
+		days = append(days, day)
 	}
 
-	groupedByDate := make(map[time.Time][]ScheduleTime)
+	groupedByDate := make(map[time.Time]ScheduleDay)
 
-	for _, t := range times {
-		date := time.Date(
-			t.StartTime.Year(),
-			t.StartTime.Month(),
-			t.StartTime.Day(),
-			0,
-			0,
-			0,
-			0,
-			c.location,
-		)
+	for _, day := range days {
+		date := day.Day
 
 		if val, ok := groupedByDate[date]; ok {
-			groupedByDate[date] = append(val, t)
+			groupedByDate[date] = ScheduleDay{
+				Day:       date,
+				Durations: append(val.Durations, day.Durations...),
+			}
 		} else {
-			groupedByDate[date] = []ScheduleTime{t}
+			groupedByDate[date] = day
 		}
-	}
-
-	var days []ScheduleDay
-
-	for date, times := range groupedByDate {
-		days = append(days, ScheduleDay{
-			Day:   date,
-			Times: times,
-		})
 	}
 
 	sort.Sort(ByDay(days))

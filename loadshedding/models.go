@@ -4,13 +4,13 @@ import "time"
 
 // Schedule export
 type Schedule struct {
-	Schedule []ScheduleDay `json:"schedule"`
+	Schedule []ScheduleDay
 }
 
 // ScheduleDay export
 type ScheduleDay struct {
-	Day   time.Time      `json:"schedule"`
-	Times []ScheduleTime `json:"scheduleTime"`
+	Day       time.Time
+	Durations []time.Duration
 }
 
 type ByDay []ScheduleDay

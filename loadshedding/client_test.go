@@ -234,26 +234,7 @@ func Test_GetSchedule(t *testing.T) {
 	), day.Day)
 
 	assert.Equal(
-		[]ScheduleTime{{
-			StartTime: time.Date(
-				2020,
-				time.September,
-				7,
-				0,
-				0,
-				0,
-				0,
-				tz,
-			),
-			EndTime: time.Date(
-				2020,
-				time.September,
-				7,
-				2,
-				30,
-				0,
-				0,
-				tz,
-			),
-		}}, day.Times)
+		[]time.Duration{
+			mustParseDuration("2h30m"),
+		}, day.Durations)
 }

@@ -17,39 +17,36 @@ func parseTime(value string, location *time.Location) (time.Time, error) {
 
 var slotRe = regexp.MustCompile(`(\d{2}:\d{2} - \d{2}:\d{2})`)
 
-type Slot struct {
-	Start time.Time
-	End   time.Time
-}
-
-func parseHTMLTime(year int, dateOfMonth, slotsRaw string, location *time.Location) ([]Slot, error) {
+func parseHTMLTime(year int, dateOfMonth, slotsRaw string, location *time.Location) (ScheduleDay, error) {
 	matches := slotRe.FindAllString(slotsRaw, -1)
 
 	if matches == nil {
-		return nil, fmt.Errorf("invalid slot: %s", slotsRaw)
+		return ScheduleDay{}, fmt.Errorf("invalid slot: %s", slotsRaw)
 	}
 
-	var slots []Slot
+	date, err := parseDate(dateOfMonth, location)
+
+	if err != nil {
+		return ScheduleDay{}, err
+	}
+
+	day := time.Date(year, date.Month(), date.Day(), 0, 0, 0, 0, location)
+
+	var durations []time.Duration
 
 	for _, match := range matches {
 		times := strings.Split(match, " - ")
 
-		date, err := parseDate(dateOfMonth, location)
-
-		if err != nil {
-			return nil, err
-		}
-
 		startTime, err := parseTime(times[0], location)
 
 		if err != nil {
-			return nil, err
+			return ScheduleDay{}, err
 		}
 
 		endTime, err := parseTime(times[1], location)
 
 		if err != nil {
-			return nil, err
+			return ScheduleDay{}, err
 		}
 
 		start := combineDateAndTime(year, date, startTime)
@@ -60,13 +57,13 @@ func parseHTMLTime(year int, dateOfMonth, slotsRaw string, location *time.Locati
 			end = end.Add(time.Hour * 24 * 1)
 		}
 
-		slots = append(slots, Slot{
-			Start: start,
-			End:   end,
-		})
+		durations = append(durations, end.Sub(start))
 	}
 
-	return slots, nil
+	return ScheduleDay{
+		Day:       day,
+		Durations: durations,
+	}, nil
 }
 
 func combineDateAndTime(year int, date time.Time, time_ time.Time) time.Time {
