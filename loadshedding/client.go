@@ -268,7 +268,7 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 			key := fmt.Sprintf("%s %s", slot.Start.Format(time.RFC3339), slot.Duration.String())
 
 			if val, ok := mergedSlots[key]; ok {
-				if val.Stage < slot.Stage {
+				if val.Stage > slot.Stage {
 					mergedSlots[key] = slot
 				}
 			} else {
