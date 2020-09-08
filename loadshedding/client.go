@@ -1,6 +1,7 @@
 package loadshedding
 
 import (
+	"bytes"
 	"fmt"
 	"sort"
 	"strconv"
@@ -199,6 +200,7 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 	var blocks []block
 
 	for _, stage := range req.Stages {
+
 		resp, err := c.createRequest().
 			// Needs to make browser like query
 			SetHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/69.0").
@@ -208,7 +210,7 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 			return nil, err
 		}
 
-		doc, err := goquery.NewDocumentFromReader(resp.RawResponse.Body)
+		doc, err := goquery.NewDocumentFromReader(bytes.NewReader(resp.Body()))
 		if err != nil {
 			return nil, err
 		}
