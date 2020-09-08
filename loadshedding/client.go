@@ -242,6 +242,7 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 
 	groupedByDate := make(map[time.Time]ScheduleDay)
 
+	// Merge same days
 	for _, day := range days {
 		date := day.Date
 
@@ -253,6 +254,13 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 		} else {
 			groupedByDate[date] = day
 		}
+	}
+
+	// Empty list
+	days = nil
+
+	for _, day := range groupedByDate {
+		days = append(days, day)
 	}
 
 	sort.Sort(ByDay(days))

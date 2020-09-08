@@ -30,6 +30,7 @@ func parseHTMLTime(year int, dateOfMonth, slotsRaw string, location *time.Locati
 		return ScheduleDay{}, err
 	}
 
+	// Set year
 	date = time.Date(year, date.Month(), date.Day(), 0, 0, 0, 0, location)
 
 	var slots []ScheduleSlot
