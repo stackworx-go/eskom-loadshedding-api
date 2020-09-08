@@ -9,20 +9,20 @@ type Schedule struct {
 
 // ScheduleDay export
 type ScheduleDay struct {
-	Day       time.Time
-	Durations []time.Duration
+	Date  time.Time
+	Slots []ScheduleSlot
 }
 
 type ByDay []ScheduleDay
 
 func (a ByDay) Len() int           { return len(a) }
-func (a ByDay) Less(i, j int) bool { return a[i].Day.Before(a[j].Day) }
+func (a ByDay) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
 func (a ByDay) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
-// ScheduleTime export
-type ScheduleTime struct {
-	StartTime time.Time `json:"startTime"`
-	EndTime   time.Time `json:"endTime"`
+// ScheduleSlot export
+type ScheduleSlot struct {
+	Start    time.Time
+	Duration time.Duration
 }
 
 // Suburb export

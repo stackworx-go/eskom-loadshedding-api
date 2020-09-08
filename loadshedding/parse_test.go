@@ -37,9 +37,10 @@ func Test_parseHTMLTime(t *testing.T) {
 	slots, err := parseHTMLTime(2020, "Mon, 07 Sep", "00:00 - 02:30", tz)
 
 	assert.NoError(err)
-	assert.Equal(1, len(slots.Durations))
-	assert.Equal(slots.Day, time.Date(2020, time.September, 7, 0, 0, 0, 0, tz))
-	assert.Equal(slots.Durations[0], mustParseDuration("2h30m"))
+	assert.Equal(1, len(slots.Slots))
+	assert.Equal(slots.Date, time.Date(2020, time.September, 7, 0, 0, 0, 0, tz))
+	assert.Equal(slots.Slots[0].Start, time.Date(2020, time.September, 7, 0, 0, 0, 0, tz))
+	assert.Equal(slots.Slots[0].Duration, mustParseDuration("2h30m"))
 }
 
 func mustParseDuration(val string) time.Duration {
@@ -61,8 +62,10 @@ func Test_parseHTMLTime_doubleSlot(t *testing.T) {
 	slots, err := parseHTMLTime(2020, "Mon, 07 Sep", "04:00 - 08:3020:00 - 00:30", tz)
 
 	assert.NoError(err)
-	assert.Equal(2, len(slots.Durations))
-	assert.Equal(slots.Day, time.Date(2020, time.September, 7, 0, 0, 0, 0, tz))
-	assert.Equal(slots.Durations[0], mustParseDuration("4h30m"))
-	assert.Equal(slots.Durations[1], mustParseDuration("4h30m"))
+	assert.Equal(2, len(slots.Slots))
+	assert.Equal(slots.Date, time.Date(2020, time.September, 7, 0, 0, 0, 0, tz))
+	assert.Equal(slots.Slots[0].Start, time.Date(2020, time.September, 7, 4, 0, 0, 0, tz))
+	assert.Equal(slots.Slots[0].Duration, mustParseDuration("4h30m"))
+	assert.Equal(slots.Slots[1].Start, time.Date(2020, time.September, 7, 20, 0, 0, 0, tz))
+	assert.Equal(slots.Slots[1].Duration, mustParseDuration("4h30m"))
 }

@@ -231,10 +231,22 @@ func Test_GetSchedule(t *testing.T) {
 		0,
 		0,
 		tz,
-	), day.Day)
+	), day.Date)
+
+	assert.Equal(1, len(day.Slots))
 
 	assert.Equal(
-		[]time.Duration{
-			mustParseDuration("2h30m"),
-		}, day.Durations)
+		ScheduleSlot{
+			Start: time.Date(
+				2020,
+				time.September,
+				7,
+				0,
+				0,
+				0,
+				0,
+				tz,
+			),
+			Duration: mustParseDuration("2h30m"),
+		}, day.Slots[0])
 }

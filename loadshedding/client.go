@@ -243,12 +243,12 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 	groupedByDate := make(map[time.Time]ScheduleDay)
 
 	for _, day := range days {
-		date := day.Day
+		date := day.Date
 
 		if val, ok := groupedByDate[date]; ok {
 			groupedByDate[date] = ScheduleDay{
-				Day:       date,
-				Durations: append(val.Durations, day.Durations...),
+				Date:  date,
+				Slots: append(val.Slots, day.Slots...),
 			}
 		} else {
 			groupedByDate[date] = day

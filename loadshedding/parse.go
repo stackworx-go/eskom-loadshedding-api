@@ -30,9 +30,9 @@ func parseHTMLTime(year int, dateOfMonth, slotsRaw string, location *time.Locati
 		return ScheduleDay{}, err
 	}
 
-	day := time.Date(year, date.Month(), date.Day(), 0, 0, 0, 0, location)
+	date = time.Date(year, date.Month(), date.Day(), 0, 0, 0, 0, location)
 
-	var durations []time.Duration
+	var slots []ScheduleSlot
 
 	for _, match := range matches {
 		times := strings.Split(match, " - ")
@@ -57,12 +57,15 @@ func parseHTMLTime(year int, dateOfMonth, slotsRaw string, location *time.Locati
 			end = end.Add(time.Hour * 24 * 1)
 		}
 
-		durations = append(durations, end.Sub(start))
+		slots = append(slots, ScheduleSlot{
+			Start:    start,
+			Duration: end.Sub(start),
+		})
 	}
 
 	return ScheduleDay{
-		Day:       day,
-		Durations: durations,
+		Date:  date,
+		Slots: slots,
 	}, nil
 }
 
