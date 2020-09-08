@@ -34,8 +34,26 @@ func Test_parseHTMLTime(t *testing.T) {
 	tz, err := time.LoadLocation("Africa/Johannesburg")
 	assert.NoError(err)
 
-	actualStart, actualEnd, err := parseHTMLTime(2020, "Mon, 07 Sep", "00:00 - 02:30", tz)
+	slots, err := parseHTMLTime(2020, "Mon, 07 Sep", "00:00 - 02:30", tz)
+
 	assert.NoError(err)
-	assert.Equal(*actualStart, time.Date(2020, time.September, 7, 0, 0, 0, 0, tz))
-	assert.Equal(*actualEnd, time.Date(2020, time.September, 7, 2, 30, 0, 0, tz))
+	assert.Equal(1, len(slots))
+	assert.Equal(slots[0].Start, time.Date(2020, time.September, 7, 0, 0, 0, 0, tz))
+	assert.Equal(slots[0].End, time.Date(2020, time.September, 7, 2, 30, 0, 0, tz))
+}
+
+func Test_parseHTMLTime_doubleSlot(t *testing.T) {
+	assert := assert.New(t)
+
+	tz, err := time.LoadLocation("Africa/Johannesburg")
+	assert.NoError(err)
+
+	slots, err := parseHTMLTime(2020, "Mon, 07 Sep", "04:00 - 08:3020:00 - 00:30", tz)
+
+	assert.NoError(err)
+	assert.Equal(2, len(slots))
+	assert.Equal(slots[0].Start, time.Date(2020, time.September, 7, 4, 0, 0, 0, tz))
+	assert.Equal(slots[0].End, time.Date(2020, time.September, 7, 8, 30, 0, 0, tz))
+	assert.Equal(slots[1].Start, time.Date(2020, time.September, 7, 20, 0, 0, 0, tz))
+	assert.Equal(slots[1].End, time.Date(2020, time.September, 8, 0, 30, 0, 0, tz))
 }

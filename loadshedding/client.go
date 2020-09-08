@@ -231,16 +231,18 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 	year := time.Now().Year()
 
 	for _, block := range blocks {
-		startTime, endTime, err := parseHTMLTime(year, block.dayMonth, block.duration, c.location)
+		slots, err := parseHTMLTime(year, block.dayMonth, block.duration, c.location)
 
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse html duration: %w", err)
 		}
 
-		times = append(times, ScheduleTime{
-			StartTime: *startTime,
-			EndTime:   *endTime,
-		})
+		for _, s := range slots {
+			times = append(times, ScheduleTime{
+				StartTime: s.Start,
+				EndTime:   s.End,
+			})
+		}
 	}
 
 	groupedByDate := make(map[time.Time][]ScheduleTime)
