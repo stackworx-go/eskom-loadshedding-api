@@ -28,7 +28,7 @@ func Test_GetStatus(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 
 	httpmock.RegisterResponder("GET", "https://loadshedding.eskom.co.za/LoadShedding/GetStatus",
-		httpmock.NewStringResponder(200, `2`))
+		httpmock.NewStringResponder(200, `3`))
 
 	stage, err := client.GetStatus()
 	assert.NoError(err)
@@ -207,7 +207,7 @@ func Test_GetSchedule(t *testing.T) {
 	scheduleHTML, err := ioutil.ReadFile("testdata/schedule.html")
 	assert.NoError(err)
 
-	httpmock.RegisterResponder("GET", "https://loadshedding.eskom.co.za/LoadShedding/GetScheduleM/64106/3/_/1",
+	httpmock.RegisterResponder("GET", "https://loadshedding.eskom.co.za/LoadShedding/GetScheduleM/64106/2/_/1",
 		func(req *http.Request) (*http.Response, error) {
 			resp := httpmock.NewStringResponse(200, string(scheduleHTML))
 			resp.Header.Set("Content-Type", "text/html")

@@ -5,7 +5,7 @@ type Province int
 
 const (
 	ProvinceUnknown     Province = -1
-	ProvinceEasternCape Province = iota + 1
+	ProvinceEasternCape Province = iota
 	ProvinceFreeState
 	ProvinceGauteng
 	ProvinceKwazuluNatal
@@ -21,7 +21,7 @@ type Stage int
 
 const (
 	StageUnknown         Stage = -1
-	StageNotLoadShedding Stage = iota + 1
+	StageNotLoadShedding Stage = iota
 	Stage1
 	Stage2
 	Stage3
