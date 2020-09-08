@@ -200,7 +200,8 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 
 	for _, stage := range req.Stages {
 		resp, err := c.createRequest().
-			// SetResult(&results).
+			// Needs to make browser like query
+			SetHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/69.0").
 			Get(c.host + fmt.Sprintf("/GetScheduleM/%s/%d/_/1", req.SuburbID, stage))
 
 		if err != nil {
