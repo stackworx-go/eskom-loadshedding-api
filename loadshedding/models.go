@@ -13,11 +13,17 @@ type ScheduleDay struct {
 	Slots []ScheduleSlot
 }
 
-type ByDay []ScheduleDay
+type ScheduleSlotByStart []ScheduleSlot
 
-func (a ByDay) Len() int           { return len(a) }
-func (a ByDay) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
-func (a ByDay) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ScheduleSlotByStart) Len() int           { return len(a) }
+func (a ScheduleSlotByStart) Less(i, j int) bool { return a[i].Start.Before(a[j].Start) }
+func (a ScheduleSlotByStart) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+
+type ScheduleSlotByDay []ScheduleDay
+
+func (a ScheduleSlotByDay) Len() int           { return len(a) }
+func (a ScheduleSlotByDay) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
+func (a ScheduleSlotByDay) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
 // ScheduleSlot export
 type ScheduleSlot struct {

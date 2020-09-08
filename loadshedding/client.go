@@ -261,10 +261,36 @@ func (c *Client) GetSchedule(req GetScheduleRequest) (*Schedule, error) {
 	days = nil
 
 	for _, day := range groupedByDate {
-		days = append(days, day)
+		var mergedSlots = make(map[string]ScheduleSlot)
+
+		for _, slot := range day.Slots {
+			// Remove duplicate days
+			key := fmt.Sprintf("%s %s", slot.Start.Format(time.RFC3339), slot.Duration.String())
+
+			if val, ok := mergedSlots[key]; ok {
+				if val.Stage < slot.Stage {
+					mergedSlots[key] = slot
+				}
+			} else {
+				mergedSlots[key] = slot
+			}
+		}
+
+		var slots []ScheduleSlot
+
+		for _, slot := range mergedSlots {
+			slots = append(slots, slot)
+		}
+
+		sort.Sort(ScheduleSlotByStart(slots))
+
+		days = append(days, ScheduleDay{
+			Date:  day.Date,
+			Slots: slots,
+		})
 	}
 
-	sort.Sort(ByDay(days))
+	sort.Sort(ScheduleSlotByDay(days))
 
 	schedule := Schedule{
 		Schedule: days,
