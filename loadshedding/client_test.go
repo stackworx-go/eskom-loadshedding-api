@@ -49,7 +49,7 @@ func Test_GetMunicipalities(t *testing.T) {
 			return resp, nil
 		})
 
-	results, err := client.GetMunicipalities(EasternCape)
+	results, err := client.GetMunicipalities(ProvinceEasternCape)
 	assert.NoError(err)
 	assert.Equal([]Municipality{
 		{

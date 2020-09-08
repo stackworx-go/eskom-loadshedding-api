@@ -33,7 +33,7 @@ func ExampleClient_GetMunicipalities() {
 
 	client := loadshedding.NewClient(tz, false)
 
-	result, err := client.GetMunicipalities(loadshedding.EasternCape)
+	result, err := client.GetMunicipalities(loadshedding.ProvinceEasternCape)
 
 	if err != nil {
 		panic(err)

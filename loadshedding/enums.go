@@ -4,23 +4,24 @@ package loadshedding
 type Province int
 
 const (
-	EasternCape Province = iota + 1
-	FreeState
-	Gauteng
-	KwazuluNatal
-	Limpopo
-	Mpumalanga
-	NorthWest
-	NorthernCape
-	WesternCape
+	ProvinceUnknown     Province = -1
+	ProvinceEasternCape Province = iota + 1
+	ProvinceFreeState
+	ProvinceGauteng
+	ProvinceKwazuluNatal
+	ProvinceLimpopo
+	ProvinceMpumalanga
+	ProvinceNorthWest
+	ProvinceNorthernCape
+	ProvinceWesternCape
 )
 
 // Stage Export
 type Stage int
 
 const (
-	StageUnknown    = -1
-	NotLoadShedding = iota + 1
+	StageUnknown         Stage = -1
+	StageNotLoadShedding Stage = iota + 1
 	Stage1
 	Stage2
 	Stage3
@@ -35,7 +36,7 @@ const (
 func ConvertStage(stage string) Stage {
 	switch stage {
 	case "1":
-		return NotLoadShedding
+		return StageNotLoadShedding
 	case "2":
 		return Stage1
 	case "3":
